@@ -6,7 +6,10 @@ Cross-platform CLI tool supporting ssh-agent (all platforms) and
 Pageant (Windows only) integration.
 
 Usage:
-    python csc_cert.py -u <username> [-s] [-v] [-r] [-a mode] [public_key.pub]
+    python csc_cert.py -u <username> [-s] [-v] [-r] [-S] [-a mode] [public_key.pub]
+    python csc_cert.py --version
+
+    On Windows, [-p] is also accepted to skip PPK file creation.
 """
 
 from __future__ import annotations
@@ -92,8 +95,8 @@ def log(message: str, config: Config, verbose_only: bool = False) -> None:
 
 
 def log_warning(message: str, config: Config) -> None:
-    """Print warning message (only in verbose mode)."""
-    if config.verbose:
+    """Print warning message unless silent mode is active."""
+    if not config.silent:
         print(f"Warning: {message}", file=sys.stderr)
 
 
@@ -816,6 +819,8 @@ Examples:
 '''
     )
 
+    parser.add_argument('--version', action='version',
+                        version=f'%(prog)s {__version__}')
     parser.add_argument('-u', '--username',
                         help='Username (required for certificate operations)')
     parser.add_argument('-s', '--silent', action='store_true',
@@ -863,6 +868,9 @@ Examples:
         public_key_path = args.public_key.expanduser().resolve()
     else:
         public_key_path = find_default_public_key()
+
+    if not is_windows and public_key_path.suffix == '.ppk':
+        parser.error("PPK keys are only supported on Windows; provide an OpenSSH .pub key instead")
 
     if is_windows and getattr(args, 'no_ppk', False) and public_key_path.suffix == '.ppk':
         parser.error("--no-ppk cannot be used with a .ppk input key")
