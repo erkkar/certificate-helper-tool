@@ -4,10 +4,13 @@ Tool that enables users to easily get a signed SSH certificate. Can be
 used as a stand-alone tool, or added to ssh config to be executed
 automatically before ssh, scp and sftp.
 
+Requires Python 3.8 or newer. No third-party packages are needed.
+
 ## Usage
 
 ```
 csc_cert.py -u <username> [-s] [-v] [-r] [-S] [-a mode] [path_to_public_key.pub]
+csc_cert.py --version
 ```
 
 Options:
@@ -17,6 +20,7 @@ Options:
 - `-r` - Refresh certificate even if old is valid
 - `-S` - Show status of keys, certificates, tools, agents, and endpoint connectivity
 - `-a <mode>` - Agent handling, to which agents is the key added (platform dependent)
+- `--version` - Print the tool version and exit
 - `path_to_public_key.pub` - Path to SSH public key (default: `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub`). On Windows, `.ppk` files are also supported
 
 If the certificate is still valid, the tool exits. Use `-r` to force
@@ -117,7 +121,7 @@ not needed. This option is not valid with `.ppk` input.
 | File | Description |
 |------|-------------|
 | `<key>-cert.pub` | OpenSSH certificate (e.g., `id_ed25519-cert.pub`) |
-| `<key>.ppk` | PuTTY private key with embedded certificate |
+| `<key>-cert.ppk` | PuTTY private key with embedded certificate (e.g., `id_ed25519-cert.ppk`) |
 
 ### Example
 
