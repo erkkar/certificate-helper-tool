@@ -1,0 +1,11 @@
+[project]
+name = "csc-cert"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+
+[tool.setuptools]
+py-modules = ["csc_cert"]
+
+[project.scripts]
+csc_cert = "csc_cert:main"
